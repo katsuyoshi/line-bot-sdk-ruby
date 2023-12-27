@@ -4,7 +4,7 @@ require 'json'
 
 describe LineWorks::Bot::Client do
 
-  it 'send the text message to the talkroom' do
+  it 'send the text message to the channel' do
     uri_template = Addressable::Template.new LineWorks::Bot::API::DEFAULT_ENDPOINT + '/bots/bot_id/channels/channel_id/messages'
     stub_request(:post, uri_template).to_return { |request| {body: request.body, status: 200} }
 
@@ -15,7 +15,7 @@ describe LineWorks::Bot::Client do
     bot_id = 'bot_id'
     channel_id = 'channel_id'
     message = 'Hello, world'
-    response = client.send_messages_to_talkroom(bot_id, channel_id, message)
+    response = client.send_messages_to_channel(bot_id, channel_id, message)
 
     expected = {
       content: {
@@ -26,7 +26,7 @@ describe LineWorks::Bot::Client do
     expect(response.body).to eq(expected)
   end
 
-  it 'send the text message in a hash to the talkroome' do
+  it 'send the text message in a hash to the channel' do
     uri_template = Addressable::Template.new LineWorks::Bot::API::DEFAULT_ENDPOINT + '/bots/bot_id/channels/channel_id/messages'
     stub_request(:post, uri_template).to_return { |request| {body: request.body, status: 200} }
 
@@ -40,7 +40,7 @@ describe LineWorks::Bot::Client do
       type: 'text',
       text: 'Hello, world'
     }
-    response = client.send_messages_to_talkroom(bot_id, channel_id, message)
+    response = client.send_messages_to_channel(bot_id, channel_id, message)
 
     expected = {
       content: message

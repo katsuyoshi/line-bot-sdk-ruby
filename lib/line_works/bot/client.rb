@@ -17,7 +17,7 @@ module LineWorks
         @endpoint ||= API::DEFAULT_ENDPOINT
       end
 
-      # Send messages to a talkroom (channel) using channel_id.
+      # Send messages to a channel using channel_id.
       # @see: https://developers.worksmobile.com/jp/docs/bot-channel-message-send
       #
       # @param bot_id [String] Bot Id
@@ -26,7 +26,7 @@ module LineWorks
       # @param headers [Hash] HTTP Headers
       # @param payload [Hash] Additional request body
       # @return [Net::HTTPResponse]
-      def send_messages_to_talkroom(bot_id, channel_id, messages, headers: {}, payload: {})
+      def send_messages_to_channel(bot_id, channel_id, messages, headers: {}, payload: {})
         channel_token_required
 
         case messages

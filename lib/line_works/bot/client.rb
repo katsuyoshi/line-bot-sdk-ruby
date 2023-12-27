@@ -17,6 +17,46 @@ module LineWorks
         @endpoint ||= API::DEFAULT_ENDPOINT
       end
 
+      # Push messages to a channel using channel_id.
+      # @see: https://developers.worksmobile.com/jp/docs/bot-channel-message-send
+      #
+      # @param bot_id [String] Bot Id
+      # @param channel_id [String] Channel Id
+      # @param content [Hash] Message Objects
+      # @param headers [Hash] HTTP Headers
+      # @param payload [Hash] Additional request body
+      # @return [Net::HTTPResponse]
+      def push_messages_to_channel(bot_id, channel_id, content, headers: {}, payload: {})
+        channel_token_required
+
+        payload[:content]
+    
+        endpoint_path = "/bots/#{bot_id}/channels/#{channel_id}/messages"
+
+        payload = payload.to_json
+        post(endpoint, endpoint_path, payload, credentials.merge(headers))
+      end
+
+      # Push messages to a user using user_id.
+      # @see: https://developers.worksmobile.com/jp/docs/bot-user-message-send
+      #
+      # @param bot_id [String] Bot Id
+      # @param user_id [String] User Id
+      # @param content [Hash] Message Objects
+      # @param headers [Hash] HTTP Headers
+      # @param payload [Hash] Additional request body
+      # @return [Net::HTTPResponse]
+      def send_messages_to_user(bot_id, user_id, content, headers: {}, payload: {})
+        channel_token_required
+
+        payload[:content]
+   
+        endpoint_path = "/bots/#{bot_id}/users/#{user_id}/messages"
+
+        payload = payload.to_json
+        post(endpoint, endpoint_path, payload, credentials.merge(headers))
+      end
+
       # Send messages to a channel using channel_id.
       # @see: https://developers.worksmobile.com/jp/docs/bot-channel-message-send
       #
@@ -31,10 +71,7 @@ module LineWorks
 
         case messages
         when String
-          payload[:content] = {
-            type: "text",
-            text: messages
-          }
+          payload[:content] = Message::Template.text messages
         when Hash
           payload[:content] = messages
         end
@@ -59,10 +96,7 @@ module LineWorks
 
         case messages
         when String
-          payload[:content] = {
-            type: "text",
-            text: messages
-          }
+          payload[:content] = Message::Template.text messages
         when Hash
           payload[:content] = messages
         end

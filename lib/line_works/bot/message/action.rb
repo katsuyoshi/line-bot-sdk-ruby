@@ -19,7 +19,7 @@ module LineWorks
               label: label,
               data: data,
               displayText: text
-            }
+          }.compact
           end
         
           # Get a message action hash value.
@@ -34,7 +34,7 @@ module LineWorks
               label: label,
               text: text,
               postback: postback
-            }
+            }.compact
           end
         
           # Get a uri action hash value.
@@ -47,7 +47,7 @@ module LineWorks
               type: 'uri',
               label: label,
               uri: uri
-            }
+            }.compact
           end
 
           # Get a camera action hash value.
@@ -58,7 +58,7 @@ module LineWorks
             {
               type: 'camera',
               label: label
-            }
+            }.compact
           end
 
           # Get a camera roll action hash value.
@@ -69,7 +69,7 @@ module LineWorks
             {
               type: 'cameraRoll',
               label: label
-            }
+            }.compact
           end
 
           # Get a location action hash value.
@@ -80,7 +80,7 @@ module LineWorks
             {
               type: 'location',
               label: label
-            }
+            }.compact
           end
 
           # Get a copy action hash value.
@@ -93,7 +93,7 @@ module LineWorks
               type: 'copy',
               label: label,
               copyText: copy
-            }
+            }.compact
           end
 
         end

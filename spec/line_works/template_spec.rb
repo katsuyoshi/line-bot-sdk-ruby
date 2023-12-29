@@ -101,4 +101,47 @@ describe LineWorks::Bot::Message::Template do
     expect(response).to eq(expected)
   end
 
+  it 'get the button message' do
+    title = 'title'
+    actions = [
+      LineWorks::Bot::Message::Action.postback('label', 'data')
+    ]
+    response = LineWorks::Bot::Message::Template.button title, actions
+
+    expected = {
+      type: 'button',
+      contentText: title,
+      actions: actions
+    }
+    expect(response).to eq(expected)
+  end
+
+  it 'get the list message' do
+    header = 'header'
+    cover = LineWorks::Bot::Message::Template.list_cover(title: 'title', sub_title: 'sub_title', image_url: 'https://example.com/sample.png')
+    element_actions = [
+      LineWorks::Bot::Message::Action.postback('label', 'data')
+    ]
+    elements = [
+      LineWorks::Bot::Message::Template.list_element(title: 'title', sub_title: 'sub_title', content_url: 'https://example.com/sample.png', actions: element_actions)
+    ]
+    actions = [
+      [
+        LineWorks::Bot::Message::Action.postback('label', 'data')
+      ],
+      [
+        LineWorks::Bot::Message::Action.postback('label', 'data')
+      ]
+    ]
+    response = LineWorks::Bot::Message::Template.list(cover, elements, actions)
+    
+    expected = {
+      type: 'list_template',
+      cover: cover,
+      elements: elements,
+      actions: actions
+    }
+    expect(response).to eq(expected)
+  end
+
 end

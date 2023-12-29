@@ -92,9 +92,146 @@ module LineWorks
             }
           end
 
+          # Get a button message hash value.
+          #
+          # @param content [String] Title text
+          # @param actions [Hash] Actions
+          # @param url [String] Link url
+          # @return [Hash]
+          def button title, actions
+            {
+              type: 'button',
+              contentText: title,
+              actions: actions
+            }
+          end
+
+          # Get a List template.
+          #
+          def list cover, elements, actions = [[], []]
+            ListTemplate.new(cover, elements, actions).to_h
+          end
+
+          # Get a cover data for list template.
+          #
+          # @param args [Hash] 
+          #   title [String] Title text
+          #   sub_title [String] Sub title text
+          #   image_url [String] Image url
+          #   file_id [String] File id
+          # @return [Hash]
+          def list_cover args
+            ListTemplate::Cover.new(args).to_h
+          end
+
+          # Get a cover data for list template.
+          #
+          # @param args [Hash] 
+          #   title [String] Title text
+          #   sub_title [String] Sub title text
+          #   content_url [String] Content url
+          #   file_id [String] File id
+          #   actions [Array] Actions
+          # @return [Hash]
+          def list_element args
+            ListTemplate::Element.new(args).to_h
+          end
+
         end
 
       end
+
+      private
+
+      class ListTemplate
+        attr_accessor :cover, :elements, :actions
+
+        # Get a cover data for list template.
+        #
+        # @param cover [Cover] Cover data
+        # @param elements [Array] Element data
+        # @param actions [Array] Actions
+        def initialize cover, elements = [], actions = [[], []]
+          @cover = cover
+          @elements = elements
+          @actions = actions
+        end
+
+        def to_h
+          {
+            type: 'list_template',
+            cover: @cover.to_h,
+            elements: @elements.map(&:to_h),
+            actions: @actions.map{_1.map(&:to_h)}
+          }
+        end
+
+        
+        # cover data for list template.
+        class Cover
+          attr_accessor :title, :sub_title, :image_url, :file_id
+
+          # Get a cover data for list template.
+          #
+          # @param args [Hash] 
+          #   title [String] Title text
+          #   sub_title [String] Sub title text
+          #   image_url [String] Image url
+          #   file_id [String] File id
+          # @return [Hash]
+          def initialize args
+            @title = args[:title]
+            @sub_title = args[:sub_title  ]
+            @image_url = args[:image_url]
+            @file_id = args[:file_id]
+          end
+
+          # Get self as a hash value.
+          def to_h
+            {
+              title: @title,
+              subTitle: @sub_title,
+              backgroundImageUrl: @image_url,
+              backgroundFileId: @file_id
+            }.compact
+          end
+        end
+
+        # Element for list template.
+        class Element
+          attr_accessor :title, :sub_title, :content_url, :file_id, :actions
+
+          # Get a cover data for list template.
+          #
+          # @param args [Hash] 
+          #   title [String] Title text
+          #   sub_title [String] Sub title text
+          #   content_url [String] Content url
+          #   file_id [String] File id
+          #   actions [Array] Actions
+          # @return [Hash]
+          def initialize args
+            @title = args[:title]
+            @sub_title = args[:sub_title  ]
+            @content_url = args[:content_url]
+            @file_id = args[:file_id]
+            @actions = args[:actions]
+          end
+
+          # Get self as a hash value.
+          def to_h
+            {
+              title: @title,
+              subTitle: @sub_title,
+              contentUrl: @content_url,
+              contentFileId: @file_id,
+              actions: @actions
+            }.compact
+          end
+        end
+
+      end
+
     end
   end
 end

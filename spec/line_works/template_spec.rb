@@ -144,4 +144,50 @@ describe LineWorks::Bot::Message::Template do
     expect(response).to eq(expected)
   end
 
+  it 'get the carousel message' do
+    action = LineWorks::Bot::Message::Action.postback('label', 'data')
+    columns = [
+      LineWorks::Bot::Message::Template.carousel_column(original_content_url: 'https://example.com/sample.png', title: 'title', text: 'text', default_action: action, actions: [action])
+    ]
+    response = LineWorks::Bot::Message::Template.carousel('rectangle', 'cover', columns)
+
+    expected = {
+      type: 'carousel',
+      imageAspectRatio: 'rectangle',
+      imageSize: 'cover',
+      columns: columns
+    }
+    expect(response).to eq(expected)
+  end
+
+  it 'get the flexible message' do
+    alt_text = 'alt_text'
+    contents =  {
+      "type": "bubble",
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "hello"
+          },
+          {
+            "type": "text",
+            "text": "world"
+          }
+        ]
+      }
+    }
+    
+    response = LineWorks::Bot::Message::Template.flexible alt_text, contents
+
+    expected = {
+      type: 'flex',
+      altText: alt_text,
+      contents: contents
+    }
+    expect(response).to eq(expected)
+  end
+
 end

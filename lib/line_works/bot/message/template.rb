@@ -137,6 +137,37 @@ module LineWorks
             ListTemplate::Element.new(args).to_h
           end
 
+          # Create a carousel hash value.
+          # @param image_aspect_ratio [String] :rectangle or :square
+          # @param image_size [String] :cover or :contain
+          # @param columns [Array] Columns
+          def carousel image_aspect_ratio = 'rectangle', image_size = 'cover', columns = []
+            CarouselTemplate.new(image_aspect_ratio, image_size, columns).to_h
+          end
+
+          # Create a column object.
+          # @param args [Hash]
+          #   original_content_url [String] Original content url
+          #   file_id [String] File id
+          #   title [String] Title text
+          #   text [String] Text
+          #   default_action [Hash] Default action
+          #   actions [Array] Actions
+          def carousel_column args
+            CarouselTemplate::Column.new(args).to_h
+          end
+
+          # Create a flexible object.
+          # @param alt_text [String] Alt text
+          # @param contents [Hash] Contents
+          def flexible alt_text, contents
+            {
+              type: 'flex',
+              altText: alt_text,
+              contents: contents
+            }
+          end
+
         end
 
       end
@@ -228,6 +259,67 @@ module LineWorks
               actions: @actions
             }.compact
           end
+        end
+
+        attr_accessor :cover, :elements, :actions
+      end
+
+      # Get carousel template object.
+      class CarouselTemplate
+        attr_accessor :image_aspect_ratio, :image_size, :columns
+
+        # Create a carousel template object.
+        # @param image_aspect_ratio [String] :rectangle or :square
+        # @param image_size [String] :cover or :contain
+        # @param columns [Array] Columns
+        def initialize image_aspect_ratio = 'rectangle', image_size = 'cover', columns = []
+          @image_aspect_ratio = image_aspect_ratio
+          @image_size = image_size
+          @columns = columns
+        end
+
+        def to_h
+          {
+            type: 'carousel',
+            imageAspectRatio: @image_aspect_ratio,
+            imageSize: @image_size,
+            columns: @columns.map(&:to_h)
+          }
+        end
+
+        # Get a carousel column object.
+        class Column
+          attr_accessor :original_content_url, :file_id, :title, :text, :default_action, :actions
+          
+          # Create a column object.
+          # @param args [Hash]
+          #   original_content_url [String] Original content url
+          #   file_id [String] File id
+          #   title [String] Title text
+          #   text [String] Text
+          #   default_action [Hash] Default action
+          #   actions [Array] Actions
+          def initialize args
+            @original_content_url = args[:original_content_url]
+            @file_id = args[:file_id]
+            @title = args[:title]
+            @text = args[:text]
+            @defaultAction = args[:default_action]
+            @actions = args[:actions]
+          end
+
+          # @return [Hash]
+          def to_h
+            {
+              thumbnailImageUrl: @original_content_url,
+              imageBackgroundColor: @file_id,
+              title: @title,
+              text: @text,
+              defaultAction: @default_action,
+              actions: @actions
+            }.compact
+          end
+
         end
 
       end
